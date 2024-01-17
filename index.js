@@ -10,8 +10,9 @@ function replaceText(word, replacement, text) {
   // Створення регулярного виразу для пошуку слова з флагом 'g' (глобальний пошук).
   // Використання методу `replace` регулярного виразу для заміни слова на фразу у тексті.
   // Повернення заміненого тексту.
+  const regex = new RegExp(word, "g");
+  return text.replace(regex, replacement);
 }
-
 // Перевірка
 console.log("Завдання 1 ==============================");
 console.log(
@@ -24,7 +25,6 @@ console.log(
 // Виведе This is an sample text sentence. Another sample text is here.
 
 // Завдання 2
-
 /**
  * Функція `checkWord` перевіряє, чи міститься певне слово у тексті.
  *
@@ -35,15 +35,15 @@ function checkWord(word, text) {
   // Створення регулярного виразу для пошуку слова з флагом 'i' (регістронезалежний пошук).
   // Використання методу `test` регулярного виразу для перевірки наявності слова у тексті.
   // Повернення результату перевірки.
+  const regex = RegExp(word, "i");
+  return regex.test(text);
 }
-
 // Перевірка
 console.log("Завдання 2 ==============================");
 console.log(checkWord("example", "This is an example sentence."));
 // Виведе true
 
 // Завдання 3
-
 /**
  * Функція `extractTextInParentheses` вилучає текст, який знаходиться в круглих дужках, з рядка.
  *
@@ -54,16 +54,19 @@ function extractTextInParentheses(str) {
   // Використання методу `matchAll` для отримання всіх збігів регулярного виразу.
   // Створення масиву зі знайденими текстами.
   // Повернення масиву вилучених текстів.
+  const regex = /\((.*?)\)/g;
+  const matches = str.matchAll(regex);
+  const arrTexts = Array.from(matches, (matchItem) => matchItem[1]);
+  // const matches = [...str.matchAll(regex)];
+  // const arrTexts = matches.map((matchItem) => matchItem[1]);
+  return arrTexts;
 }
-
 // Перевірка
 console.log("Завдання 3 ==============================");
-
 console.log(extractTextInParentheses("I have some (text) in (parentheses)."));
 // Виведе [ 'text', 'parentheses' ]
 
 // Завдання 4
-
 /**
  * Функція `countEmails` знаходить та підраховує кількість email-адрес у рядку.
  *
@@ -74,11 +77,12 @@ function countEmails(str) {
   // Використання методу `match` для отримання всіх збігів регулярного виразу.
   // Підрахунок кількості email-адрес.
   // Повернення кількості email-адрес.
+  const regex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
+  const emailCount = str.match(regex);
+  return emailCount.length;
 }
-
 // Перевірка
 console.log("Завдання 4 ==============================");
-
 console.log(
   countEmails("Emails: john@example.com, kate@example.com, mike@example.com")
 );
@@ -95,16 +99,21 @@ console.log(
 function findWordOccurrences(str, word) {
   // Створення регулярного виразу для пошуку слова з флагами 'g та 'i',
   // Створюємо пустий масив matches, та змінну match без значення
-  // За допомогою циклу whild створюємо ітерацію поки рядок містить збіги з регулярним виразом, та змінній match присвоюємо збіги
+  // За допомогою циклу while створюємо ітерацію поки рядок містить збіги з регулярним виразом, та змінній match присвоюємо збіги
   // Додавання індексу поточного входження слова у масив.
   // Оновлення lastIndex,присвоєюмо йому значення  match.index + 1, щоб продовжити пошук з наступного символу
   // Повертаємо масив
+  const regex = RegExp(word, "gi");
+  const matches = [];
+  let match;
+  while ((match = regex.exec(str)) !== null) {
+    matches.push(match.index);
+    regex.lastIndex = match.index + 1;
+  }
+  return matches;
 }
-
 // Перевірка
-
 console.log("Завдання 5 ==============================");
-
 console.log(
   findWordOccurrences(
     "The quick brown fox jumps over the lazy dog. The Fox is quick.",
@@ -114,7 +123,6 @@ console.log(
 // Виведе  [ 16, 49 ]
 
 // Завдання 6
-
 /**
  * Функція `checkRegexFlags` перевіряє регулярний вираз на наявність флагів 'g' та 'm'.
  *
@@ -125,17 +133,15 @@ function checkRegexFlags(regex) {
   // Отримуємо всі флаги регулярного виразу.
   // Перевіряємо наявність флагів 'g' та 'm' за допомогою методу `includes`.
   // Повертаємо  - true, якщо флаги 'g' та 'm' присутні, інакше - false
+  if (regex.flags.includes("g") || regex.flags.includes("m")) return true;
+  else return false;
 }
-
 // Перевірка
-
 console.log("Завдання 6 ==============================");
-
 console.log(checkRegexFlags(/pattern/gm));
 // Виведе true
 
 // Завдання 7
-
 /**
  * Функція `replaceWordOccurrences` замінює всі входження заданого слова у рядку на нове слово.
  *
@@ -148,11 +154,11 @@ function replaceWordOccurrences(str, word, newWord) {
   // Створюємо регулярний вираз зі словом, використовуючи флаг 'g' для глобального пошуку всіх входжень.
   // Заміняємо всі входження слова у рядку на нове слово.
   // Повертаємо результат
+  const regex = RegExp(word, "g");
+  return str.replace(regex, newWord);
 }
-
 // Перевірка
 console.log("Завдання 7 ==============================");
-
 console.log(
   replaceWordOccurrences(
     "The quick brown fox jumps over the lazy dog. The fox is quick.",
@@ -163,7 +169,6 @@ console.log(
 // Виведе The quick brown cat jumps over the lazy dog. The cat is quick.
 
 // Завдання 8
-
 /**
  * Функція `checkFlags` перевіряє, які флаги використовуються в заданому регулярному виразі.
  *
@@ -177,16 +182,19 @@ function checkFlags(regex) {
   // Отримуємо вихідний код регулярного виразу за допомогою властивості `source`.
   // Додаємо вихідний код до масиву
   // Повертаємо масив використаних флагів.
+  const arrFlags = [];
+  if (regex.flags.includes("i")) {
+    arrFlags.push("ignoreCase");
+  }
+  arrFlags.push(regex.source);
+  return arrFlags;
 }
-
 // Приклад використання:
 console.log("Завдання 8 ==============================");
-
 console.log(checkFlags(/pattern/gimsy));
 // Виведе[ 'ignoreCase', 'pattern' ]
 
 // Завдання 9
-
 /**
  * Функція `checkRegexMethods` перевіряє, які методи використовуються в заданому регулярному виразі.
  *
@@ -199,16 +207,24 @@ function checkRegexMethods(regex) {
   // Перевіряємо, чи використовується метод `multiline`.
   // Перевіряємо, чи використовується метод `sticky`.
   // Повертаємо масив використаних методів.
-}
+  const arrMethods = [];
+  // const flag = regex.flags;
+  if (regex.flags.includes("s")) arrMethods.push("dotAll");
+  if (regex.flags.includes("m")) arrMethods.push("multiline");
+  if (regex.flags.includes("y")) arrMethods.push("stycky");
 
+  // if (regex.dotAll) arrMethods.push("dotAll");
+  // if (regex.multiline) arrMethods.push("multiline");
+  // if (regex.sticky) arrMethods.push("sticky");
+
+  return arrMethods;
+}
 // Приклад використання:
 console.log("Завдання 9 ==============================");
-
 console.log(checkRegexMethods(/test/msy));
 // Виведе [ 'dotAll', 'multiline', 'sticky' ]
 
 // Завдання 10
-
 /**
  * Функція `findWord` знаходить перше входження заданого слова у рядок за допомогою методу `search`.
  *
@@ -219,11 +235,12 @@ console.log(checkRegexMethods(/test/msy));
 function findWord(str, word) {
   // Створення регулярного виразу для пошуку слова.
   // Використання методу `search` для пошуку першого входження слова.
+  const regex = RegExp(word, "i");
+  const index = str.search(regex);
+  return index;
 }
-
 // Приклад використання:
 console.log("Завдання 10 ==============================");
-
 console.log(
   findWord(
     "The quick brown fox jumps over the lazy dog. The fox is quick.",
